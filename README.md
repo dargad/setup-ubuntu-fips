@@ -1,6 +1,6 @@
 # Ubuntu FIPS-Updates Action
 
-[![CI](https://github.com/canonical/ubuntu-fips-updates-action/actions/workflows/ci.yml/badge.svg)](https://github.com/canonical/ubuntu-fips-updates-action/actions/workflows/ci.yml)
+[![CI](https://github.com/canonical/setup-ubuntu-fips/actions/workflows/ci.yml/badge.svg)](https://github.com/canonical/setup-ubuntu-fips/actions/workflows/ci.yml)
 
 A GitHub Action that sets up an Ubuntu VM with FIPS-updates enabled via Ubuntu Pro. Use this to test your software in a FIPS-compliant environment.
 
@@ -17,13 +17,13 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup FIPS environment
-        uses: canonical/ubuntu-fips-updates-action@v1
+        uses: canonical/setup-ubuntu-fips@v1
         with:
           pro-token: ${{ secrets.PRO_TOKEN }}
           shared-path: ${{ github.workspace }}
 
       - name: Run tests in FIPS mode
-        uses: canonical/ubuntu-fips-updates-action/run@v1
+        uses: canonical/setup-ubuntu-fips/run@v1
         with:
           working-directory: /shared
           commands: |
@@ -31,7 +31,7 @@ jobs:
 
       - name: Cleanup
         if: always()
-        uses: canonical/ubuntu-fips-updates-action/cleanup@v1
+        uses: canonical/setup-ubuntu-fips/cleanup@v1
 ```
 
 ## How It Works
@@ -45,7 +45,7 @@ jobs:
 
 ## Actions Reference
 
-### Setup (`canonical/ubuntu-fips-updates-action`)
+### Setup (`canonical/setup-ubuntu-fips`)
 
 Creates and configures the FIPS-enabled VM.
 
@@ -62,7 +62,7 @@ Creates and configures the FIPS-enabled VM.
 |--------|-------------|
 | `vm-name` | Name of the created VM |
 
-### Run (`canonical/ubuntu-fips-updates-action/run`)
+### Run (`canonical/setup-ubuntu-fips/run`)
 
 Executes commands inside the VM.
 
@@ -73,7 +73,7 @@ Executes commands inside the VM.
 | `working-directory` | Directory inside VM | No | - |
 | `shell` | Shell to use | No | `bash` |
 
-### Cleanup (`canonical/ubuntu-fips-updates-action/cleanup`)
+### Cleanup (`canonical/setup-ubuntu-fips/cleanup`)
 
 Detaches from Ubuntu Pro and deletes the VM. **Always run this in an `if: always()` step.**
 
@@ -87,11 +87,11 @@ Detaches from Ubuntu Pro and deletes the VM. **Always run this in an `if: always
 ### Basic FIPS Validation
 
 ```yaml
-- uses: canonical/ubuntu-fips-updates-action@v1
+- uses: canonical/setup-ubuntu-fips@v1
   with:
     pro-token: ${{ secrets.PRO_TOKEN }}
 
-- uses: canonical/ubuntu-fips-updates-action/run@v1
+- uses: canonical/setup-ubuntu-fips/run@v1
   with:
     commands: |
       cat /proc/sys/crypto/fips_enabled  # Should output: 1
@@ -99,7 +99,7 @@ Detaches from Ubuntu Pro and deletes the VM. **Always run this in an `if: always
       openssl list -providers
 
 - if: always()
-  uses: canonical/ubuntu-fips-updates-action/cleanup@v1
+  uses: canonical/setup-ubuntu-fips/cleanup@v1
 ```
 
 ### Build and Test a Project
@@ -107,16 +107,16 @@ Detaches from Ubuntu Pro and deletes the VM. **Always run this in an `if: always
 ```yaml
 - uses: actions/checkout@v4
 
-- uses: canonical/ubuntu-fips-updates-action@v1
+- uses: canonical/setup-ubuntu-fips@v1
   with:
     pro-token: ${{ secrets.PRO_TOKEN }}
     shared-path: ${{ github.workspace }}
 
-- uses: canonical/ubuntu-fips-updates-action/run@v1
+- uses: canonical/setup-ubuntu-fips/run@v1
   with:
     commands: apt-get update && apt-get install -y build-essential
 
-- uses: canonical/ubuntu-fips-updates-action/run@v1
+- uses: canonical/setup-ubuntu-fips/run@v1
   with:
     working-directory: /shared
     commands: |
@@ -125,13 +125,13 @@ Detaches from Ubuntu Pro and deletes the VM. **Always run this in an `if: always
       make test
 
 - if: always()
-  uses: canonical/ubuntu-fips-updates-action/cleanup@v1
+  uses: canonical/setup-ubuntu-fips/cleanup@v1
 ```
 
 ### Retrieve Artifacts
 
 ```yaml
-- uses: canonical/ubuntu-fips-updates-action/run@v1
+- uses: canonical/setup-ubuntu-fips/run@v1
   with:
     commands: ./run-tests.sh --output /tmp/results.xml
 
@@ -149,7 +149,7 @@ Detaches from Ubuntu Pro and deletes the VM. **Always run this in an `if: always
 ### Custom VM Configuration
 
 ```yaml
-- uses: canonical/ubuntu-fips-updates-action@v1
+- uses: canonical/setup-ubuntu-fips@v1
   with:
     pro-token: ${{ secrets.PRO_TOKEN }}
     vm-name: my-test-vm
@@ -157,13 +157,13 @@ Detaches from Ubuntu Pro and deletes the VM. **Always run this in an `if: always
     cpu-limit: '4'
     memory-limit: '8GiB'
 
-- uses: canonical/ubuntu-fips-updates-action/run@v1
+- uses: canonical/setup-ubuntu-fips/run@v1
   with:
     vm-name: my-test-vm
     commands: echo "Running on Ubuntu 22.04 with 4 CPUs"
 
 - if: always()
-  uses: canonical/ubuntu-fips-updates-action/cleanup@v1
+  uses: canonical/setup-ubuntu-fips/cleanup@v1
   with:
     vm-name: my-test-vm
 ```
@@ -191,4 +191,4 @@ Store your token as a repository secret named `PRO_TOKEN`.
 
 See the [examples](examples/) directory for sample workflows.
 
-Issues and pull requests are welcome at [github.com/canonical/ubuntu-fips-updates-action](https://github.com/canonical/ubuntu-fips-updates-action).
+Issues and pull requests are welcome at [github.com/canonical/setup-ubuntu-fips](https://github.com/canonical/setup-ubuntu-fips).

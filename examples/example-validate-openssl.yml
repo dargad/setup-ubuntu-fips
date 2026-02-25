@@ -12,12 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup FIPS environment
-        uses: canonical/ubuntu-fips-updates-action@v1
+        uses: canonical/setup-ubuntu-fips@v1
         with:
           pro-token: ${{ secrets.PRO_TOKEN }}
 
       - name: Validate FIPS is enabled
-        uses: canonical/ubuntu-fips-updates-action/run@v1
+        uses: canonical/setup-ubuntu-fips/run@v1
         with:
           commands: |
             openssl version
@@ -25,7 +25,7 @@ jobs:
             cat /proc/cmdline
 
       - name: Test FIPS restrictions
-        uses: canonical/ubuntu-fips-updates-action/run@v1
+        uses: canonical/setup-ubuntu-fips/run@v1
         with:
           commands: |
             echo "Testing FIPS OpenSSL..."
@@ -41,6 +41,6 @@ jobs:
 
       - name: Cleanup
         if: always()
-        uses: canonical/ubuntu-fips-updates-action/cleanup@v1
+        uses: canonical/setup-ubuntu-fips/cleanup@v1
         with:
           vm-name: fips-vm
